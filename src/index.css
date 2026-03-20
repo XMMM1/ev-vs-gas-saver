@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 145 15% 97%;
+    --foreground: 160 20% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 160 20% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 20% 8%;
+
+    --primary: 210 80% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 155 25% 93%;
+    --secondary-foreground: 160 25% 15%;
+
+    --muted: 150 12% 92%;
+    --muted-foreground: 155 10% 42%;
+
+    --accent: 30 90% 52%;
+    --accent-foreground: 30 90% 10%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 150 12% 88%;
+    --input: 150 12% 88%;
+    --ring: 210 80% 50%;
+
+    --radius: 0.75rem;
+
+    /* Custom calculator tokens */
+    --ev: 210 80% 50%;
+    --ev-foreground: 0 0% 100%;
+    --gas: 15 85% 50%;
+    --gas-foreground: 0 0% 100%;
+    --solar: 45 93% 47%;
+    --solar-foreground: 45 93% 10%;
+    --savings: 210 80% 50%;
+    --loss: 0 72% 51%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(210 80% 50%), hsl(215 85% 35%));
+    --shadow-card: 0 1px 3px 0 hsl(160 20% 8% / 0.06), 0 1px 2px -1px hsl(160 20% 8% / 0.06);
+    --shadow-card-hover: 0 10px 25px -5px hsl(160 20% 8% / 0.08), 0 8px 10px -6px hsl(160 20% 8% / 0.04);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 160 15% 6%;
+    --foreground: 150 15% 95%;
+    --card: 160 15% 9%;
+    --card-foreground: 150 15% 95%;
+    --popover: 160 15% 9%;
+    --popover-foreground: 150 15% 95%;
+    --primary: 210 80% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 155 20% 15%;
+    --secondary-foreground: 150 15% 90%;
+    --muted: 155 15% 15%;
+    --muted-foreground: 150 10% 60%;
+    --accent: 30 90% 52%;
+    --accent-foreground: 30 90% 95%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 155 15% 18%;
+    --input: 155 15% 18%;
+    --ring: 210 80% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .card-calculator {
+    @apply rounded-xl border bg-card text-card-foreground;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .card-calculator:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .metric-card {
+    @apply rounded-xl border bg-card p-5;
+    box-shadow: var(--shadow-card);
+  }
+
+  .input-field {
+    @apply flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1;
+    @apply placeholder:text-muted-foreground;
+  }
+
+  .section-title {
+    @apply text-lg font-bold tracking-tight;
+  }
+
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+}
