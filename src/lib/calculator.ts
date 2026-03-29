@@ -92,6 +92,23 @@ export const defaultInputs: CalcInputs = {
   solarSystemCost: 8000,
 };
 
+/** Find the fractional year where gasCumulative crosses the given EV cumulative line */
+function findCrossingYear(
+  data: YearlyData[],
+  evKey: 'evCumulative' | 'evSolarCumulative'
+): number | null {
+  if (data.length > 0 && data[0].gasCumulative >= data[0][evKey]) return 0;
+  for (let i = 1; i < data.length; i++) {
+    const prevDiff = data[i - 1].gasCumulative - data[i - 1][evKey];
+    const currDiff = data[i].gasCumulative - data[i][evKey];
+    if (prevDiff < 0 && currDiff >= 0) {
+      const fraction = -prevDiff / (currDiff - prevDiff);
+      return data[i - 1].year + fraction;
+    }
+  }
+  return null;
+}
+
 /** Annualize recurring costs: amount / everyYears */
 function annualizeRecurring(costs: RecurringCost[]): number {
   return costs.reduce((sum, c) => sum + (c.everyYears > 0 ? c.amount / c.everyYears : 0), 0);
@@ -207,27 +224,7 @@ export function calculateResults(inputs: CalcInputs): CalcResults {
     }
   }
 
-  // Break-even (EV only, no solar)
-  let breakEvenYears: number | null = null;
-  const priceDiff = (evPurchasePrice - evResaleValue) - (gasPurchasePrice - gasResaleValue);
-  if (annualSavings > 0 && priceDiff > 0) {
-    breakEvenYears = priceDiff / annualSavings;
-  } else if (priceDiff <= 0) {
-    breakEvenYears = 0;
-  }
-
-  // Break-even with solar
-  let breakEvenYearsWithSolar: number | null = null;
-  if (hasSolar) {
-    const priceDiffSolar = (evPurchasePrice - evResaleValue + solarSystemCost) - (gasPurchasePrice - gasResaleValue);
-    const evSolarAnnualOp = evAnnualCharging + evMaintenanceAnnual + evInsuranceAnnual + evRecurringAnnualized;
-    const annualSavingsWithSolar = gasAnnualTotal - evSolarAnnualOp;
-    if (annualSavingsWithSolar > 0 && priceDiffSolar > 0) {
-      breakEvenYearsWithSolar = priceDiffSolar / annualSavingsWithSolar;
-    } else if (priceDiffSolar <= 0) {
-      breakEvenYearsWithSolar = 0;
-    }
-  }
+  // Break-even values will be derived from yearlyData below
 
   const maxEvPrice = (gasPurchasePrice - gasResaleValue) + annualSavings * ownershipYears + evResaleValue;
 
@@ -253,6 +250,12 @@ export function calculateResults(inputs: CalcInputs): CalcResults {
       savingsWithSolar: gasCum - evSolarCum,
     });
   }
+
+  // Break-even derived from chart data so reference line matches visual crossing
+  const breakEvenYears = findCrossingYear(yearlyData, 'evCumulative');
+  const breakEvenYearsWithSolar = hasSolar
+    ? findCrossingYear(yearlyData, 'evSolarCumulative')
+    : null;
 
   return {
     gasAnnualFuel, gasAnnualTotal,

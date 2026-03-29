@@ -263,14 +263,18 @@ const ResultsDashboard = forwardRef<HTMLDivElement, Props>(function ResultsDashb
                   contentStyle={{ borderRadius: 8, border: "1px solid hsl(150,12%,88%)", fontSize: 13 }}
                 />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                {breakEvenYears !== null && breakEvenYears > 0 && breakEvenYears <= yearlyData.length && (
-                  <ReferenceLine
-                    x={`Yr ${Math.ceil(breakEvenYears)}`}
-                    stroke="hsl(155,10%,65%)"
-                    strokeDasharray="5 5"
-                    label={{ value: "Break-even", fontSize: 10, fill: "hsl(155,10%,45%)" }}
-                  />
-                )}
+                {(() => {
+                  const be = hasSolar ? breakEvenYearsWithSolar : breakEvenYears;
+                  if (be === null || be <= 0 || be > yearlyData.length) return null;
+                  return (
+                    <ReferenceLine
+                      x={`Yr ${Math.ceil(be)}`}
+                      stroke="hsl(155,10%,65%)"
+                      strokeDasharray="5 5"
+                      label={{ value: "Break-even", fontSize: 10, fill: "hsl(155,10%,45%)" }}
+                    />
+                  );
+                })()}
                 <Line type="monotone" dataKey="Gasoline" stroke={GAS_COLOR} strokeWidth={2.5} dot={false} />
                 <Line type="monotone" dataKey="Electric" stroke={EV_COLOR} strokeWidth={2.5} dot={false} />
                 {hasSolar && (
