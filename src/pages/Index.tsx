@@ -4,10 +4,9 @@ import { generatePdf } from "@/lib/generatePdf";
 import { supabase } from "@/integrations/supabase/client";
 import CalculatorForm from "@/components/calculator/CalculatorForm";
 import ResultsDashboard from "@/components/calculator/ResultsDashboard";
-import { Zap, Fuel, SlidersHorizontal, Download, Loader2, RefreshCw, Calculator } from "lucide-react";
+import { Zap, Fuel, Download, Loader2, RefreshCw, Calculator } from "lucide-react";
 import ProposalFab from "@/components/ProposalFab";
 import heroBg from "@/assets/hero-bg.jpg";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
@@ -40,7 +39,6 @@ const CompactParam = ({
 
 const Index = () => {
   const [inputs, setInputs] = useState<CalcInputs>(defaultInputs);
-  const [advanced, setAdvanced] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [pdfDialogOpen, setPdfDialogOpen] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
@@ -177,16 +175,6 @@ const Index = () => {
                   <Download className="w-3.5 h-3.5" />
                   PDF
                 </Button>
-                <SlidersHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
-                <Label className="text-xs font-medium text-muted-foreground cursor-pointer" htmlFor="advanced-toggle">
-                  Advanced
-                </Label>
-                <Switch
-                  id="advanced-toggle"
-                  checked={advanced}
-                  onCheckedChange={setAdvanced}
-                  className="scale-90"
-                />
               </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1">
@@ -270,19 +258,9 @@ const Index = () => {
                   <Download className="w-4 h-4" />
                   Download PDF
                 </Button>
-                <SlidersHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
-                <Label className="text-xs font-medium text-muted-foreground cursor-pointer" htmlFor="advanced-toggle-inline">
-                  Advanced
-                </Label>
-                <Switch
-                  id="advanced-toggle-inline"
-                  checked={advanced}
-                  onCheckedChange={setAdvanced}
-                  className="scale-90"
-                />
               </div>
             </div>
-            <ResultsDashboard ref={dashboardRef} results={results} inputs={calculatedInputs!} advanced={advanced} />
+            <ResultsDashboard ref={dashboardRef} results={results} inputs={calculatedInputs!} />
           </section>
         )}
       </main>

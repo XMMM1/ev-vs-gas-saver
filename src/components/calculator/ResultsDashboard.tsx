@@ -15,7 +15,6 @@ import {
 interface Props {
   results: CalcResults;
   inputs: CalcInputs;
-  advanced?: boolean;
 }
 
 const fmt = (n: number) =>
@@ -102,7 +101,7 @@ const EV_COLOR = "#2563eb";
 const GAS_COLOR = "#e84525";
 const SOLAR_COLOR = "#eab308";
 
-const ResultsDashboard = forwardRef<HTMLDivElement, Props>(function ResultsDashboard({ results, inputs, advanced = false }, ref) {
+const ResultsDashboard = forwardRef<HTMLDivElement, Props>(function ResultsDashboard({ results, inputs }, ref) {
   const {
     gasAnnualFuel, gasAnnualTotal,
     evAnnualCharging, evAnnualTotal,
@@ -402,8 +401,7 @@ const ResultsDashboard = forwardRef<HTMLDivElement, Props>(function ResultsDashb
           </div>
         </div>
 
-        {/* Advanced: Detailed Calculation Breakdown */}
-        {advanced && (
+        {/* Detailed Calculation Breakdown */}
           <div data-pdf-section className="card-calculator p-5">
             <h3 className="section-title mb-4">Calculation Details</h3>
             <div className="grid lg:grid-cols-2 gap-6">
@@ -530,7 +528,6 @@ const ResultsDashboard = forwardRef<HTMLDivElement, Props>(function ResultsDashb
               </div>
             </div>
           </div>
-        )}
 
         {/* Solar-Only Benefits */}
         {inputs.hasSolar && (
@@ -648,7 +645,6 @@ const ResultsDashboard = forwardRef<HTMLDivElement, Props>(function ResultsDashb
             </div>
 
             {/* Advanced solar details */}
-            {advanced && (
               <div className="mt-4 p-4 rounded-lg bg-secondary text-sm">
                 <h4 className="font-semibold mb-2">Solar Calculation Details</h4>
                 <div className="space-y-1.5 text-muted-foreground">
@@ -660,7 +656,6 @@ const ResultsDashboard = forwardRef<HTMLDivElement, Props>(function ResultsDashb
                   <p>Grid electricity for EV: {(evEnergyNeeded - results.solarCoverageKwh).toFixed(0)} kWh/year × {fmtDec(inputs.electricityCost)}/kWh = <span className="font-medium text-foreground">{fmt(gridElectricityCost)}/year</span></p>
                 </div>
               </div>
-            )}
 
             <p className="text-xs text-muted-foreground mt-3">
               EV needs {evEnergyNeeded.toFixed(0)} kWh/year • Solar covers {results.solarCoverageKwh.toFixed(0)} kWh
@@ -697,16 +692,12 @@ const ResultsDashboard = forwardRef<HTMLDivElement, Props>(function ResultsDashb
                   <th className="text-right py-2 pl-4 font-semibold">
                     <ValueWithTip tip="The difference between Gas Total and EV Total at each year. Positive (green) means the EV is cheaper overall by that amount. Negative (red) means the gas car is still cheaper. When this flips from red to green, you've hit the break-even point.">Cum. Savings</ValueWithTip>
                   </th>
-                  {advanced && (
-                    <>
                       <th className="text-right py-2 px-4 font-semibold text-gas">
                         <ValueWithTip tip="The fixed annual operating cost for the gasoline car: fuel + maintenance + insurance + annualized recurring costs. Same each year (no inflation modeled).">Gas Annual</ValueWithTip>
                       </th>
                       <th className="text-right py-2 px-4 font-semibold text-ev">
                         <ValueWithTip tip="The fixed annual operating cost for the EV: charging + maintenance + insurance + annualized recurring costs. Same each year (no inflation modeled).">EV Annual</ValueWithTip>
                       </th>
-                    </>
-                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -729,12 +720,8 @@ const ResultsDashboard = forwardRef<HTMLDivElement, Props>(function ResultsDashb
                     <td className={`text-right py-2 pl-4 font-medium ${(hasSolar ? d.savingsWithSolar : d.savings) >= 0 ? "text-savings" : "text-loss"}`}>
                       {fmt(hasSolar ? d.savingsWithSolar : d.savings)}
                     </td>
-                    {advanced && (
-                      <>
                         <td className="text-right py-2 px-4 text-muted-foreground">{fmt(gasAnnualTotal)}</td>
                         <td className="text-right py-2 px-4 text-muted-foreground">{fmt(evAnnualTotal)}</td>
-                      </>
-                    )}
                   </tr>
                 ))}
               </tbody>
